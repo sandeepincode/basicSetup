@@ -1,18 +1,40 @@
-import express from 'express';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const connectMongo = require('connect-mongo');
+
+const login = require('./routes/api/login');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
 
 const app = express();
+const MongoStore = connectMongo(session);
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+// connect to MongoDB
+mongoose.connect('mongodb://localhost/testdatabase');
+const db = mongoose.connection;
 
-// uncomment after placing your favicon in /public
+// handle mongo error
+db.on('error', console.error.bind(console, 'connection error:'));
+
+db.once('open', () => {
+  console.log('We have connected to the data base');
+});
+
+// use sessions for tracking logins
+app.use(session({
+  secret: 'this is a secret',
+  resave: true,
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongooseConnection: db,
+  }),
+}));
+
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,7 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-
+app.use('api', login);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

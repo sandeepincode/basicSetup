@@ -1,7 +1,7 @@
 {
   "name": "basicsetup",
   "version": "1.0.0",
-  "description": "Basic Client Server Shell for setting up porjects",
+  "description": "Basic Client Server Shell for setting up projects",
   "main": "app.js",
   "repository": {
     "type": "git",
@@ -22,13 +22,13 @@
   },
   "scripts": {
     "test": "jest",
-    "dev": "better-npm-run dev",
+    "dev-backend": "better-npm-run dev",
     "build": "babel src -s -D -d dist",
     "start": "nodeman dist/app.js"
   },
   "betterScripts": {
-    "dev": {
-      "command": "nodemon -w src --exec \"babel-node src/app.js\""
+    "dev-backend": {
+      "command": "nodemon -w src --exec \"babel-node src/server/app.js\""
     }
   },
   "babel": {
@@ -38,6 +38,7 @@
     ]
   },
   "dependencies": {
+    "better-npm-run": "^0.1.0",
     "babel-cli": "6.9.0",
     "babel-core": "6.9.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
