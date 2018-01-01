@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import axios from 'axios';
-import {push} from 'react-router-redux';
+import { push } from 'react-router-redux';
 import simpleAction from '../../util/simpleAction';
 
 export const UPDATE_EMAIL = 'updateEmail/login/prime';
@@ -18,46 +18,46 @@ const initialState = {
   data: {
     email: '',
     password: '',
-  }
+  },
 };
 
 export default function loginReducer(state = initialState, {type, payload}) {
   switch (type) {
     case UPDATE_EMAIL: {
       return update(state, {
-        data: {email: {$set: payload}}
+        data: { email: { $set: payload } },
       });
     }
     case UPDATE_PASSWORD: {
       return update(state, {
-        data: {password: {$set: payload}}
-      })
+        data: { password: { $set: payload } },
+      });
     }
     case FETCH_LOGIN_REQUEST: {
       return update(state, {
         ui: {
-          loading: {$set: true},
-          error: {$set: ''}
-        }
-      })
+          loading: { $set: true },
+          error: { $set: '' },
+        },
+      });
     }
     case FETCH_LOGIN_FAILURE: {
       return update(state, {
         ui: {
-          loading: {$set: false},
-          error: {$set: payload}
-        }
+          loading: { $set: false },
+          error: { $set: payload },
+        },
       });
     }
     case FETCH_LOGIN_SUCCESS: {
-      return {...initialState};
+      return { ...initialState };
     }
     case LOGOUT: {
-      return {...initialState};
+      return { ...initialState };
     }
+    default:
+      return state;
   }
-
-  return state;
 }
 
 export const updateEmail = simpleAction(UPDATE_EMAIL);
@@ -67,7 +67,7 @@ const loginFailure = simpleAction(FETCH_LOGIN_FAILURE);
 
 export function submitLogin() {
   return async (dispatch, getState) => {
-    dispatch({type: FETCH_LOGIN_REQUEST});
+    dispatch({ type: FETCH_LOGIN_REQUEST });
 
     const {
       email,
@@ -82,25 +82,21 @@ export function submitLogin() {
 
       if (response.data.error) {
         return dispatch(loginFailure(response.data.error));
-      } else {
-        dispatch(push('/prime'));
-
-        return dispatch({
-          type: FETCH_LOGIN_SUCCESS
-        })
       }
-
+      dispatch(push('/prime'));
+      return dispatch({
+        type: FETCH_LOGIN_SUCCESS,
+      });
     } catch (e) {
-      return dispatch(loginFailure('Something went wrong'))
+      return dispatch(loginFailure('Something went wrong'));
     }
-  }
+  };
 }
 
 export function logout() {
   return async (dispatch) => {
     axios.get('/prime/api/logout');
-
     dispatch(push('/prime/login'));
-
-    dispatch({type: LOGOUT});
-  }
+    dispatch({ type: LOGOUT });
+  };
+}

@@ -1,9 +1,8 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { routerMiddleware, routerReducer } from 'react-router-redux';
-import history from '../history';
-
 import loginReducer from './reducers/login';
+import history from '../history';
 
 const reducers = combineReducers({
   login: loginReducer,
