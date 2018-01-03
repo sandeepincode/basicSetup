@@ -1,10 +1,9 @@
 const express = require('express');
 const User = require('../../models/User');
-
 const router = express.Router();
 
 // Checking user session validity
-router.get('/auth', (req, res) => {
+router.get('/login', (req, res) => {
   User.findById(req.session.userId).exec((error, user) => {
     if (error) {
       return res.json({
@@ -21,17 +20,14 @@ router.get('/auth', (req, res) => {
       response: 1,
     });
   });
-  return res.json({
-    response: 0,
-  });
 });
 
-
 //  Login/New User
-router.post('/auth', (req, res) => {
+router.post('/login', (req, res) => {
   if (req.body.email &&
       req.body.password &&
       req.body.passwordConf) {
+
     const userData = {
       email: req.body.email,
       password: req.body.password,
@@ -65,10 +61,9 @@ router.post('/auth', (req, res) => {
   } else {
     return res.json({
       response: 0,
-      msg: 'Required Fields',
+      msg: 'Looks Like You Have Some Missing Fields',
     });
   }
-  return res.json({});
 });
 
 module.exports = router;

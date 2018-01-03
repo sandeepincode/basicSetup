@@ -3,6 +3,6 @@ export default function simpleAction(type, payload) {
     return {
       type,
       payload: value,
-    };
-  };
+    }
+  }
 }

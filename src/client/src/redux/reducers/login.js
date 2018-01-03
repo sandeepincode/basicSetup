@@ -3,12 +3,14 @@ import axios from 'axios';
 import { push } from 'react-router-redux';
 import simpleAction from '../../util/simpleAction';
 
-export const UPDATE_EMAIL = 'updateEmail/login/prime';
-export const UPDATE_PASSWORD = 'updatePassword/login/prime';
-export const FETCH_LOGIN_REQUEST = 'fetchLoginRequest/login/prime';
-export const FETCH_LOGIN_FAILURE = 'fetchLoginFailure/login/prime';
-export const FETCH_LOGIN_SUCCESS = 'fetchLoginSuccess/login/prime';
-export const LOGOUT = 'logout/login/prime';
+export const UPDATE_LOGEMAIL = 'updateLogEmail/login/shift';
+export const UPDATE_LOGPASSWORD = 'updateLogPassword/login/shift';
+
+export const FETCH_LOGIN_REQUEST = 'fetchLoginRequest/login/shift';
+export const FETCH_LOGIN_FAILURE = 'fetchLoginFailure/login/shift';
+export const FETCH_LOGIN_SUCCESS = 'fetchLoginSuccess/login/shift';
+
+export const LOGOUT = 'logout/login/shift';
 
 const initialState = {
   ui: {
@@ -16,21 +18,25 @@ const initialState = {
     error: '',
   },
   data: {
-    email: '',
-    password: '',
-  },
+    logemail: '',
+    logpassword: '',
+  }
 };
 
 export default function loginReducer(state = initialState, {type, payload}) {
   switch (type) {
-    case UPDATE_EMAIL: {
+    case UPDATE_LOGEMAIL: {
       return update(state, {
-        data: { email: { $set: payload } },
+        data: {
+          logemail: { $set: payload },
+        },
       });
     }
-    case UPDATE_PASSWORD: {
+    case UPDATE_LOGPASSWORD: {
       return update(state, {
-        data: { password: { $set: payload } },
+        data: {
+          logpassword: { $set: payload },
+        },
       });
     }
     case FETCH_LOGIN_REQUEST: {
@@ -50,53 +56,55 @@ export default function loginReducer(state = initialState, {type, payload}) {
       });
     }
     case FETCH_LOGIN_SUCCESS: {
-      return { ...initialState };
+      return {...initialState};
     }
     case LOGOUT: {
-      return { ...initialState };
+      return {...initialState};
     }
-    default:
-      return state;
   }
+  return state;
 }
 
-export const updateEmail = simpleAction(UPDATE_EMAIL);
-export const updatePassword = simpleAction(UPDATE_PASSWORD);
-
 const loginFailure = simpleAction(FETCH_LOGIN_FAILURE);
+export const updateLogEmail = simpleAction(UPDATE_LOGEMAIL);
+export const updateLogPassword = simpleAction(UPDATE_LOGPASSWORD);
 
 export function submitLogin() {
   return async (dispatch, getState) => {
-    dispatch({ type: FETCH_LOGIN_REQUEST });
+    dispatch({type: FETCH_LOGIN_REQUEST});
 
     const {
-      email,
-      password,
+      logemail,
+      logpassword,
     } = getState().login.data;
 
     try {
-      const response = await axios.post('/prime/api/login', {
-        email,
-        password,
+      const response = await axios.post('/api/login', {
+        data: {
+          logemail,
+          logpassword,
+        },
+        withCredentials: true,
       });
 
       if (response.data.error) {
         return dispatch(loginFailure(response.data.error));
+      } else {
+        dispatch(push('/shift'));
+        return dispatch({
+          type: FETCH_LOGIN_SUCCESS
+        })
       }
-      dispatch(push('/prime'));
-      return dispatch({
-        type: FETCH_LOGIN_SUCCESS,
-      });
     } catch (e) {
-      return dispatch(loginFailure('Something went wrong'));
+      return dispatch(loginFailure('Something went wrong'))
     }
-  };
+  }
 }
 
 export function logout() {
   return async (dispatch) => {
-    axios.get('/prime/api/logout');
-    dispatch(push('/prime/login'));
-    dispatch({ type: LOGOUT });
-  };
+    axios.get('/api/logout');
+    dispatch(push('/shift/login'));
+    dispatch({type: LOGOUT});
+  }
 }
