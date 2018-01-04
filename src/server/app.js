@@ -7,20 +7,18 @@ const session = require('express-session');
 const connectMongo = require('connect-mongo');
 
 const login = require('./routes/api/login');
-
 const index = require('./routes/index');
-const users = require('./routes/users');
 
 const app = express();
 const MongoStore = connectMongo(session);
 
-// connect to MongoDB
-mongoose.connect('mongodb://localhost/testdatabase');
+// connect to MongoDB-
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/testdatabase', { useMongoClient: true });
 const db = mongoose.connection;
 
 // handle mongo error
 db.on('error', console.error.bind(console, 'connection error:'));
-
 db.once('open', () => {
   console.log('We have connected to the data base');
 });
@@ -42,8 +40,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
-app.use('api', login);
+app.use('/api', login);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

@@ -27,6 +27,9 @@ export default function loginReducer(state = initialState, {type, payload}) {
   switch (type) {
     case UPDATE_LOGEMAIL: {
       return update(state, {
+        ui: {
+          error: { $set: '' },
+        },
         data: {
           logemail: { $set: payload },
         },
@@ -34,6 +37,9 @@ export default function loginReducer(state = initialState, {type, payload}) {
     }
     case UPDATE_LOGPASSWORD: {
       return update(state, {
+        ui: {
+          error: { $set: '' },
+        },
         data: {
           logpassword: { $set: payload },
         },
@@ -79,21 +85,26 @@ export function submitLogin() {
     } = getState().login.data;
 
     try {
-      const response = await axios.post('/api/login', {
+      const resp = await axios.post('/api/login', {
         data: {
           logemail,
           logpassword,
         },
         withCredentials: true,
       });
-
-      if (response.data.error) {
-        return dispatch(loginFailure(response.data.error));
+      if (resp.data.error) {
+        return dispatch(loginFailure(resp.data.error));
       } else {
-        dispatch(push('/shift'));
+        if(resp.response === 1){
+          dispatch('/shift');
+          return dispatch({
+            type: FETCH_LOGIN_SUCCESS
+          })
+        }
         return dispatch({
-          type: FETCH_LOGIN_SUCCESS
-        })
+          type: FETCH_LOGIN_FAILURE,
+          payload: resp.data.msg,
+        });
       }
     } catch (e) {
       return dispatch(loginFailure('Something went wrong'))

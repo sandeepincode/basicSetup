@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     required: true,
     trim: true,
-    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'please enter a valid email address'],
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email address'],
   },
   password: {
     type: String,
@@ -28,9 +28,10 @@ UserSchema.statics.authenticate = (userEmail, password, callback) => {
     if (err) {
       return callback(err);
     } else if (!user) {
-      const error = new Error('User not found.');
-      error.status = 401;
-      return callback(error);
+      return callback({
+        response: 0,
+        msg: 'This acccount is not registered',
+      });
     }
     bcrypt.compare(password, user.password, (error, result) => {
       if (result === true) {
@@ -53,18 +54,6 @@ UserSchema.pre('save', function (next) {
     next();
   });
 });
-
-// UserSchema.pre('save', (next) => {
-//   const user = this;
-//   bcrypt.hash(user.password, 10, (err, hash) => {
-//     if (err) {
-//       return next(err);
-//     }
-//     user.password = hash;
-//     return next();
-//   });
-//   return false;
-// });
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User;

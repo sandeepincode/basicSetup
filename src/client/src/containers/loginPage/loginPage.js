@@ -30,7 +30,8 @@ class LoginPage extends Component {
 
           <label>Enter Email:</label>
           <input
-            type="text"
+            type="email"
+            name="logemail"
             value={this.props.email}
             onChange={eventToAction(this.props.updateLogEmail)}
             placeholder="email"
@@ -39,6 +40,7 @@ class LoginPage extends Component {
           <label>Enter Password:</label>
           <input
             type="password"
+            name="logpassword"
             value={this.props.password}
             onChange={eventToAction(this.props.updateLogPassword)}
             placeholder="password"
