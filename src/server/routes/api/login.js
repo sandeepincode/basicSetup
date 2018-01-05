@@ -24,6 +24,8 @@ router.get('/login', (req, res) => {
 
 //  Login/New User
 router.post('/login', (req, res) => {
+  console.log(req.body);
+  
   if (req.body.email &&
       req.body.password &&
       req.body.passwordConf) {
@@ -50,7 +52,7 @@ router.post('/login', (req, res) => {
       if (error || !user) {
         return res.json({
           response: 0,
-          msg: error,
+          msg: 'This acccount is not registered',
         });
       }
       req.session.userId = user._id;

@@ -78,18 +78,14 @@ export const updateLogPassword = simpleAction(UPDATE_LOGPASSWORD);
 
 export function submitLogin() {
   return async (dispatch, getState) => {
-
-    console.log('we are sending the data');
-
     dispatch({type: FETCH_LOGIN_REQUEST});
-
     const {
       logemail,
       logpassword,
     } = getState().login.data;
 
     try {
-      const resp = await request({
+      request({
         url: '/api/login',
         method: 'POST',
         withCredentials: true,
@@ -98,38 +94,29 @@ export function submitLogin() {
           logpassword,
         }
       }, (error, res, body) => {
-        if ( error ) {
+        return new Promise((resolve, reject) => {
+          if ( error ) {
+            dispatch({
+              type: FETCH_LOGIN_FAILURE,
+              payload: error,
+            });
+            return reject();
+          }
+          return resolve(JSON.parse(body));
+        }).then((resp) => {
+          if(resp.response === 1){
+            dispatch('/shift');
+            return dispatch({
+              type: FETCH_LOGIN_SUCCESS
+            })
+          }
           return dispatch({
             type: FETCH_LOGIN_FAILURE,
-            payload: error,
+            payload: resp.msg,
           });
-        }
-        console.log(JSON.parse(body));
-        return JSON.parse(body);
-      });
-      // const resp = await axios.post('/api/login', {
-      //   data: {
-      //     logemail,
-      //     logpassword,
-      //   },
-      //   withCredentials: true,
-      // });
-      if (!resp || !resp.response) {
-        return dispatch(loginFailure(resp.data.error));
-      } else {
-        if(resp.response === 1){
-          dispatch('/shift');
-          return dispatch({
-            type: FETCH_LOGIN_SUCCESS
-          })
-        }
-        return dispatch({
-          type: FETCH_LOGIN_FAILURE,
-          payload: resp.data.msg,
         });
-      }
+      });
     } catch (e) {
-      console.log(e);
       return dispatch(loginFailure('Something went wrong'))
     }
   }
