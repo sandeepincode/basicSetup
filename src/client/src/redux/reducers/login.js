@@ -1,5 +1,6 @@
 import update from 'immutability-helper';
 import axios from 'axios';
+import request from 'ajax-request';
 import { push } from 'react-router-redux';
 import simpleAction from '../../util/simpleAction';
 
@@ -77,6 +78,9 @@ export const updateLogPassword = simpleAction(UPDATE_LOGPASSWORD);
 
 export function submitLogin() {
   return async (dispatch, getState) => {
+
+    console.log('we are sending the data');
+
     dispatch({type: FETCH_LOGIN_REQUEST});
 
     const {
@@ -85,14 +89,32 @@ export function submitLogin() {
     } = getState().login.data;
 
     try {
-      const resp = await axios.post('/api/login', {
+      const resp = await request({
+        url: '/api/login',
+        method: 'POST',
+        withCredentials: true,
         data: {
           logemail,
           logpassword,
-        },
-        withCredentials: true,
+        }
+      }, (error, res, body) => {
+        if ( error ) {
+          return dispatch({
+            type: FETCH_LOGIN_FAILURE,
+            payload: error,
+          });
+        }
+        console.log(JSON.parse(body));
+        return JSON.parse(body);
       });
-      if (resp.data.error) {
+      // const resp = await axios.post('/api/login', {
+      //   data: {
+      //     logemail,
+      //     logpassword,
+      //   },
+      //   withCredentials: true,
+      // });
+      if (!resp || !resp.response) {
         return dispatch(loginFailure(resp.data.error));
       } else {
         if(resp.response === 1){
@@ -107,6 +129,7 @@ export function submitLogin() {
         });
       }
     } catch (e) {
+      console.log(e);
       return dispatch(loginFailure('Something went wrong'))
     }
   }
