@@ -15,6 +15,7 @@ import history from './history';
 import HomePage from './containers/HomePage/HomePage';
 import InfoPage from './containers/InfoPage/InfoPage';
 import LoginPage from './containers/LoginPage/LoginPage';
+import RegisterPage from './containers/RegisterPage/RegisterPage';
 import Error404Page from './containers/Error404Page/Error404Page';
 
 // Components
@@ -27,9 +28,10 @@ ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history} basename="/">
       <Switch>
-      
+
         <Route exact path="/" component={InfoPage} />
         <Route path="/login" component={LoginPage} />
+        <Route path="/register" component={RegisterPage} />
 
         <BasePage>
           <Route exact path="/shift" component={HomePage} />

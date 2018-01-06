@@ -1,5 +1,6 @@
 import update from 'immutability-helper';
 import axios from 'axios';
+import request from 'ajax-request';
 import { push } from 'react-router-redux';
 import simpleAction from '../../util/simpleAction';
 
@@ -77,7 +78,7 @@ export const updateRegPasswordConf = simpleAction(UPDATE_REGPASSWORDCONF);
 export function submitRegister() {
   return async (dispatch, getState) => {
     dispatch({ type: FETCH_REGISTER_REQUEST });
-
+    console.log('submit register');
     const {
       email,
       password,
@@ -85,22 +86,38 @@ export function submitRegister() {
     } = getState().register.data;
 
     try {
-      const response = await axios.post('/api/login', {
+      request({
+        url: '/api/login',
+        method: 'POST',
+        withCredentials: true,
         data: {
           email,
           password,
           passwordConf,
-        },
-        withCredentials: true,
+        }
+      }, (error, res, body) => {
+        return new Promise((resolve, reject) => {
+          if ( error ) {
+            dispatch({
+              type: FETCH_REGISTER_FAILURE,
+              payload: error,
+            });
+            return reject();
+          }
+          return resolve(JSON.parse(body));
+        }).then((resp) => {
+          if(resp.response === 1){
+            dispatch('/shift');
+            return dispatch({
+              type: FETCH_REGISTER_SUCCESS
+            })
+          }
+          return dispatch({
+            type: FETCH_REGISTER_FAILURE,
+            payload: resp.msg,
+          });
+        });
       });
-      if (response.data.error) {
-        return dispatch(registerFailure(response.data.error));
-      } else {
-        dispatch(push('/shift'));
-        return dispatch({
-          type: FETCH_REGISTER_SUCCESS
-        })
-      }
     } catch (e) {
       return dispatch(registerFailure('Something went wrong'))
     }

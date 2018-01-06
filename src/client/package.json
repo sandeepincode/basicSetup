@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "ajax-request": "^1.2.3",
     "axios": "^0.17.1",
     "immutability-helper": "^2.6.2",
     "react": "^16.2.0",
@@ -13,8 +14,8 @@
     "react-router-redux": "^5.0.0-alpha.8",
     "react-scripts": "1.0.17",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0",
-    "redux-act": "^1.5.0"
+    "redux-act": "^1.5.0",
+    "redux-thunk": "^2.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

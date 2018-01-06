@@ -9,8 +9,8 @@ function mapStateToProps({login}) {
   return {
     loading: ui.loading,
     error: ui.error,
-    email: data.email,
-    password: data.password,
+    email: data.logemail,
+    password: data.logpassword,
   }
 }
 
