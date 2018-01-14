@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import history from '../../history';
 import eventToAction from '../../util/eventToAction';
 import { updateLogEmail, updateLogPassword, submitLogin } from '../../redux/reducers/login';
 
@@ -74,7 +75,17 @@ class LoginPage extends Component {
             Log In
           </button>
         </div>
-        <a href="/register" className="forgot">Register?</a></form>
+
+        <div className="form-group">
+          <button
+            className="btn btn-primary btn-block"
+            type="submit"
+            onClick={()=> history.push('/register')}
+          >
+            Want to Register?
+          </button>
+        </div>
+        </form>
         </div>
     );
   }

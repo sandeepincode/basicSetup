@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import history from '../../history';
 import eventToAction from '../../util/eventToAction';
 import {
   updateRegEmail,
@@ -100,7 +101,16 @@ class RegisterPage extends Component {
             Register
           </button>
         </div>
-        <a href="/login" className="forgot">Login?</a></form>
+        <div className="form-group">
+          <button
+            className="btn btn-primary btn-block"
+            type="submit"
+            onClick={()=> history.push('/login')}
+          >
+            Login?
+          </button>
+        </div>
+        </form>
         </div>
     );
   }
