@@ -5,10 +5,14 @@ import history from '../history';
 
 import loginReducer from './reducers/login';
 import registerReducer from './reducers/register';
+import sessionReducer from './reducers/session';
+import logoutReducer from './reducers/logout';
 
 const reducers = combineReducers({
   login: loginReducer,
   register: registerReducer,
+  logout: logoutReducer,
+  session: sessionReducer,
 });
 
 let devTools = f => f;

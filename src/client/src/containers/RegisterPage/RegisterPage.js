@@ -32,47 +32,75 @@ function mapDispatchToProps(dispatch) {
 
 class RegisterPage extends Component {
   render() {
-    return (
-        <div>
-          <h3>Register Page</h3>
 
-          <label>Enter Email:</label>
+    const error = [];
+
+    if(this.props.error){
+      error.push((
+        <div className="alert" role="alert" style={{backgroundColor:'#f4466b', color:'white'}}>
+          <div>{this.props.error}</div>
+        </div>
+      ));
+    }
+
+    return (
+
+      <div className="login-clean">
+        <form method="post">
+          <h2 className="sr-only">Register Form</h2>
+        <div className="illustration">
+          <i className="icon ion-plus-round"></i>
+        </div>
+
+        {error}
+
+        <div className="form-group">
           <input
+            className="form-control"
             required="true"
             type="email"
             name="email"
             value={this.props.email}
             onChange={eventToAction(this.props.updateRegEmail)}
-            placeholder="email"
+            placeholder="Email"
           />
+        </div>
 
-          <label>Enter Password:</label>
+        <div className="form-group">
           <input
+            className="form-control"
             required="true"
             type="password"
             name="password"
             value={this.props.password}
             onChange={eventToAction(this.props.updateRegPassword)}
-            placeholder="password"
+            placeholder="Enter Password"
           />
+        </div>
 
-          <label>Confirm Password:</label>
+        <div className="form-group">
           <input
+            className="form-control"
             required="true"
             type="password"
             name="passwordConf"
             value={this.props.passwordConf}
             onChange={eventToAction(this.props.updateRegPasswordConf)}
-            placeholder="confirm password"
+            placeholder="Confirm Password"
           />
+        </div>
 
+        <div className="form-group">
           <button
+            className="btn btn-primary btn-block"
+            type="submit"
             onClick={this.props.submitRegister}
             disabled={this.props.loading}
-          >Submit</button>
-
-          <br/>
-           <div>{this.props.error}</div>
+          >
+            Register
+          </button>
+        </div>
+        <a href="/login" className="forgot">Login?</a></form>
         </div>
     );
   }

@@ -79,6 +79,7 @@ export const updateLogPassword = simpleAction(UPDATE_LOGPASSWORD);
 export function submitLogin() {
   return async (dispatch, getState) => {
     dispatch({type: FETCH_LOGIN_REQUEST});
+
     const {
       logemail,
       logpassword,
@@ -124,7 +125,7 @@ export function submitLogin() {
 
 export function logout() {
   return async (dispatch) => {
-    axios.get('/api/logout');
+    const resp = await axios.get('/api/logout');
     dispatch(push('/shift/login'));
     dispatch({type: LOGOUT});
   }

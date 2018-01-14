@@ -24,11 +24,16 @@ router.get('/login', (req, res) => {
 
 //  Login/New User
 router.post('/login', (req, res) => {
-  console.log(req.body);
-  
   if (req.body.email &&
       req.body.password &&
       req.body.passwordConf) {
+
+    if (req.body.password !== req.body.passwordConf) {
+      return res.json({
+        response: 0,
+        msg: 'Passwords entered do not match',
+      });
+    }
 
     const userData = {
       email: req.body.email,
@@ -37,6 +42,11 @@ router.post('/login', (req, res) => {
 
     User.create(userData, (error, user) => {
       if (error) {
+        const keys = Object.keys(error.errors);
+        keys.forEach((key) => {
+          //error+= error.errors[key].message + ' '
+          console.log(error.errors[key].message);
+        });
         return res.json({
           response: 0,
           msg: error,
@@ -56,7 +66,7 @@ router.post('/login', (req, res) => {
         });
       }
       req.session.userId = user._id;
-      return res.send({
+      return res.json({
         response: 1,
       });
     });

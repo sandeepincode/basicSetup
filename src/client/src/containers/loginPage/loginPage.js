@@ -24,35 +24,57 @@ function mapDispatchToProps(dispatch) {
 
 class LoginPage extends Component {
   render() {
+    const error = [];
+    if(this.props.error){
+      error.push((
+        <div className="alert" role="alert" style={{backgroundColor:'#f4466b', color:'white'}}>
+          <div>{this.props.error}</div>
+        </div>
+      ));
+    }
     return (
-        <div>
-          <h3>Login Page</h3>
 
-          <label>Enter Email:</label>
+      <div className="login-clean">
+        <form method="post">
+          <h2 className="sr-only">Login Form</h2>
+        <div className="illustration">
+        <i className="icon ion-log-in"></i>
+        </div>
+
+        {error}
+
+        <div className="form-group">
           <input
+            className="form-control"
             type="email"
             name="logemail"
             value={this.props.email}
             onChange={eventToAction(this.props.updateLogEmail)}
-            placeholder="email"
+            placeholder="Email"
           />
+        </div>
 
-          <label>Enter Password:</label>
+        <div className="form-group">
           <input
+            className="form-control"
             type="password"
             name="logpassword"
             value={this.props.password}
             onChange={eventToAction(this.props.updateLogPassword)}
-            placeholder="password"
+            placeholder="Password"
           />
-
+        </div>
+        <div className="form-group">
           <button
+            className="btn btn-primary btn-block"
+            type="submit"
             onClick={this.props.submitLogin}
             disabled={this.props.loading}
-          >Submit</button>
-
-          <br/>
-           <div>{this.props.error}</div>
+          >
+            Log In
+          </button>
+        </div>
+        <a href="/register" className="forgot">Register?</a></form>
         </div>
     );
   }

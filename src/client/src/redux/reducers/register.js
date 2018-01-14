@@ -77,8 +77,10 @@ export const updateRegPasswordConf = simpleAction(UPDATE_REGPASSWORDCONF);
 
 export function submitRegister() {
   return async (dispatch, getState) => {
-    dispatch({ type: FETCH_REGISTER_REQUEST });
-    console.log('submit register');
+    dispatch({
+      type: FETCH_REGISTER_REQUEST
+    });
+    
     const {
       email,
       password,

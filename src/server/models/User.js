@@ -46,6 +46,8 @@ UserSchema.statics.authenticate = (userEmail, password, callback) => {
 /* eslint-disable */
 UserSchema.pre('save', function (next) {
   var user = this;
+  console.log(user);
+  
   bcrypt.hash(user.password, 10, function (err, hash) {
     if (err) {
       return next(err);
